@@ -1,11 +1,9 @@
 import cv2
 import numpy as np
 import config as g
-image_path = '../data/red_test.jpg'
-def image_color(image_path):
+def image_color(image):
     colors = ['blue', 'green', 'red', None]
     color_index = -1
-    image = cv2.imread(image_path)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     mask_blue = cv2.inRange(hsv, g.lower_blue, g.upper_blue)
@@ -32,4 +30,5 @@ def image_color(image_path):
         color_index = max_color_index
     return colors[color_index]
 if __name__ == '__main__':
-    print(image_color(image_path))
+    image = cv2.imread('../data/test.jpg')
+    print(image_color(image))
