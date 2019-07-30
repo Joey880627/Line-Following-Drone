@@ -1,0 +1,34 @@
+import cv2
+import numpy as np
+import config as g
+def image_color(image):
+    colors = ['blue', 'green', 'red', None]
+    color_index = -1
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    mask_blue = cv2.inRange(hsv, g.lower_blue, g.upper_blue)
+    mask_green = cv2.inRange(hsv, g.lower_green, g.upper_green)
+    mask_red_1 = cv2.inRange(hsv, g.lower_red_1, g.upper_red_1)
+    mask_red_2 = cv2.inRange(hsv, g.lower_red_2, g.upper_red_2)
+    mask_red = cv2.bitwise_or(mask_red_1, mask_red_2)
+    '''
+    res_blue = cv2.bitwise_and(image, image, mask = mask_blue)
+    res_green = cv2.bitwise_and(image, image, mask = mask_green)
+    res_red = cv2.bitwise_and(image, image, mask = mask_red)
+    cv2.imshow('original image', image)
+    cv2.imshow('res_blue', res_blue)
+    cv2.imshow('res_green', res_green)
+    cv2.imshow('res_red', res_red)
+    cv2.waitKey()
+    cv2.destroyAllWindows()'''
+    color_sum = [(mask_blue!=0).sum(),
+                 (mask_green!=0).sum(),
+                 (mask_red!=0).sum()]
+    # print(color_sum)
+    max_color_index = np.argmax(color_sum)
+    if color_sum[max_color_index] >= g.color_area:
+        color_index = max_color_index
+    return colors[color_index]
+if __name__ == '__main__':
+    image = cv2.imread('../data/test.jpg')
+    print(image_color(image))
